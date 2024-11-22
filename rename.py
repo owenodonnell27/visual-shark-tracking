@@ -4,10 +4,10 @@ import os
 def rename_files_in_directory(root_dir):
     for subdir, dirs, files in os.walk(root_dir):
         for i, file in enumerate(files):
-            if file.endswith(('.jpg', '.png', '.txt')):  
+            if file.endswith(('.jpg', '.png', '.jpeg', '.JPG', '.gif')):  
                 # Generate new file name based on directory name and index
                 directory_name = os.path.basename(subdir)
-                new_file_name = f"{directory_name}_{i+1:04d}{os.path.splitext(file)[1]}"
+                new_file_name = f"{directory_name}_{i+1:03d}{os.path.splitext(file)[1]}"
                 
                 # Full file paths
                 old_file_path = os.path.join(subdir, file)
