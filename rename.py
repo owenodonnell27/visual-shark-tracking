@@ -5,7 +5,7 @@ def rename_files_in_directory(root_dir):
 
     for subdir, dirs, files in os.walk(root_dir):
         for i, file in enumerate(files):
-            if not file.endswith(('.txt', 'json')):  
+            if file.endswith(('.jpg')):  
                 
                 new_file_name = file + '.jpg'
 
@@ -18,5 +18,5 @@ def rename_files_in_directory(root_dir):
                 print(f'Renamed: {old_file_path} -> {new_file_path}')
 
 # Define the root directory you want to process
-root_directory = '.\\images'
-rename_files_in_directory(root_directory)
+# root_directory = '.\\images'
+# rename_files_in_directory(root_directory)
