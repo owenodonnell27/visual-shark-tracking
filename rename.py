@@ -2,8 +2,7 @@ import os
 
 # Use this file/function to rename data
 def rename_files_in_directory(root_dir):
-    S = set() 
-    i = 0
+
     for subdir, dirs, files in os.walk(root_dir):
         for i, file in enumerate(files):
             if not file.endswith(('.txt', 'json')):  
