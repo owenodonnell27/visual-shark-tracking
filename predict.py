@@ -1,35 +1,39 @@
-import tensorflow as tf
 import numpy as np
-from tensorflow.keras.preprocessing import image
+import tflite_runtime.interpreter as tflite
+from PIL import Image
 
-def load_model(model_path, weights_path):
-    model = tf.keras.models.load_model(model_path)
-    model.load_weights(weights_path) 
-    return model
+def load_tflite_model(model_path):
+    interpreter = tflite.Interpreter(model_path=model_path)
+    interpreter.allocate_tensors()
+    return interpreter
+
 
 def preprocess_image(img_path, target_size=(256, 256)):
-    img = image.load_img(img_path, target_size=target_size) 
-    img_array = image.img_to_array(img) 
-    img_array = np.expand_dims(img_array, axis=0) 
-    img_array /= 255.0 
+    img = Image.open(img_path).convert("RGB")  # Open image and ensure RGB format
+    img = img.resize(target_size)  # Resize to target dimensions
+    img_array = np.array(img).astype(np.float32) / 255.0  # Convert to float32 and normalize
+    img_array = np.expand_dims(img_array, axis=0)  # Expand dimensions for model input
     return img_array
 
-
-def predict(model, img_array, class_names=("non-shark", "shark")):
-    prediction = model.predict(img_array) 
-
-    predicted_class_index = np.argmax(prediction, axis=1)[0] 
-    predicted_class = class_names[predicted_class_index]  
-
-    confidence = prediction[0][predicted_class_index] 
+def predict(interpreter, img_array, class_names=("non-shark", "shark")):
+    input_details = interpreter.get_input_details()
+    output_details = interpreter.get_output_details()
+    
+    interpreter.set_tensor(input_details[0]['index'], img_array)
+    interpreter.invoke()
+    
+    prediction = interpreter.get_tensor(output_details[0]['index'])
+    predicted_class_index = np.argmax(prediction, axis=1)[0]
+    predicted_class = class_names[predicted_class_index]
+    confidence = prediction[0][predicted_class_index]
+    
     return predicted_class, confidence
 
-model_path = "./initial_model.h5" 
-weights_path = "./initial_weights.h5" 
-image_path = "./images/test/great_white_shark.0.jpg"
+model_path = "initial_model.tflite"  # Path to your TensorFlow Lite model
+interpreter = load_tflite_model(model_path)
 
-model = load_model(model_path, weights_path)
-img_array = preprocess_image(image_path)
-predicted_class, confidence = predict(model, img_array)
-
-print(f"Predicted class: {predicted_class} with confidence: {confidence:.2f}")
+while True:
+    image_path = input("Select an image: ")
+    img_array = preprocess_image(image_path)
+    predicted_class, confidence = predict(interpreter, img_array)
+    print(f"Predicted class: {predicted_class} with confidence: {confidence:.2f}")
