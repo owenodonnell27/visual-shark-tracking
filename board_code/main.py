@@ -52,10 +52,8 @@ def print_table(data):
 
 if __name__ == '__main__':
 
-    model_path = weights_path = image_path = './' 
-
     model_data = [
-        {'name': 'initial_model', 'accuracy': 80, 'f1': 'f1 score', 'battery': 'battery usage'},
+        {'name': 'initial_model', 'accuracy': 0.80, 'f1': 0.89, 'battery': 'battery usage'},
         {'name': 'dummy_model', 'accuracy': 100, 'f1': 'Perfect', 'battery': 'None'}
     ]
 
@@ -63,8 +61,11 @@ if __name__ == '__main__':
         print_table(model_data)
         sys.exit()
 
-    model_path += sys.argv[1] + '.h5'
-    weights_path += sys.argv[1] + '_weights.h5'
+    model_path = weights_path = './models/' + sys.argv[1]
+    image_path = './' 
+
+    model_path += '.h5'
+    weights_path += '_weights.h5'
     model = load_model(model_path, weights_path)
 
     image_queue = Queue()
