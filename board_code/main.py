@@ -2,9 +2,10 @@ import numpy as np
 import tflite_runtime.interpreter as tflite
 from PIL import Image
 import sys
-from queue import Queue
 import time
 import os
+import coral_fswebcam
+import uart
 
 
 def load_tflite_model(model_path):
@@ -78,22 +79,14 @@ if __name__ == '__main__':
     image_queue = Queue()
 
     while True:
-        image_names = os.listdir('./new_images')
-        for image in image_names:
-            image_queue.put(image)
 
-            old_path = './new_images/' + image
-            new_path = './queued_images/' + image
-            os.rename(old_path, new_path)
+        time.sleep(5)
+        coral_fswebcam.capture()
 
-        time.sleep(1)
+        img_array = preprocess_image('camera_image.jpg')
+        predicted_class, confidence = predict(model, img_array)
+        print(f'Predicted class: {predicted_class} with confidence: {confidence:.2f}')
 
-        if not image_queue.empty():
-            current_image = image_queue.get()
-            img_array = preprocess_image('./queued_images/' + current_image)
-            predicted_class, confidence = predict(model, img_array)
-            print(f'{current_image} => Predicted class: {predicted_class} with confidence: {confidence:.2f}')
-
-            old_path = './queued_images/' + current_image
-            new_path = './old_images/' + current_image
-            os.rename(old_path, new_path)
+        # TODO: Add code for sending data to packet
+        
+        
