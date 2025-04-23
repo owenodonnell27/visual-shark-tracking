@@ -175,21 +175,21 @@ def _setDTPCK():
   ##   _dt_bytes <<= 4*(len(hex(dt_list[i]))-2);
   ##   _dt_bytes |= dt_list[i]
 
-  _dt_bytes <<= 12
-  _dt_bytes |= _img_dt.year
+  # _dt_bytes <<= 12
+  # _dt_bytes |= _img_dt.year
 
-  _dt_bytes <<= 4
-  _dt_bytes |= _img_dt.month
+  # _dt_bytes <<= 4
+  # _dt_bytes |= _img_dt.month
 
-  _dt_bytes <<= 8
-  _dt_bytes |= _img_dt.day
+  # _dt_bytes <<= 8
+  # _dt_bytes |= _img_dt.day
 
-  _dt_bytes <<= 8
-  _dt_bytes |= _img_dt.hour
+  # _dt_bytes <<= 8
+  # _dt_bytes |= _img_dt.hour
 
-  _dt_bytes <<= 8
-  _dt_bytes |= _img_dt.minute
-
+  # _dt_bytes <<= 8
+  # _dt_bytes |= _img_dt.minute
+  _dt_bytes = _img_dt.year + _img_dt.month + _img_dt.day + _img_dt.hour
   return _dt_bytes
 
 if __name__ == "__main__":

@@ -3,6 +3,7 @@ import tflite_runtime.interpreter as tflite
 from PIL import Image
 import sys
 import time
+import serial
 import os
 import coral_fswebcam
 import coral_uart
@@ -76,6 +77,7 @@ if __name__ == '__main__':
     model_path += '.tflite'
     model = load_tflite_model(model_path)
 
+    ser = serial.Serial('/dev/ttymxc0', 9600)
     while True:
 
         time.sleep(5)
@@ -86,5 +88,6 @@ if __name__ == '__main__':
         print(f'Predicted class: {predicted_class} with confidence: {confidence:.2f}')
 
         # TODO: Add code for sending data to packet
-        
-        
+        ser.write(b'Hello, Serial Port!\n')
+
+    ser.close()
