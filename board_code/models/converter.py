@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 # Load the model from the .h5 file
-model = tf.keras.models.load_model('MODEL FILE NAME HERE')
+model = tf.keras.models.load_model('./initial_model.h5')
 
 # Create a TFLiteConverter object from the model
 converter = tf.lite.TFLiteConverter.from_keras_model(model)

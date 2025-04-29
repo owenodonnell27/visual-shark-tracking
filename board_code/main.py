@@ -3,10 +3,12 @@ import tflite_runtime.interpreter as tflite
 from PIL import Image
 import sys
 import time
+import datetime
 import serial
 import os
 import coral_fswebcam
 import coral_uart
+import random
 
 
 def load_tflite_model(model_path):
@@ -72,22 +74,28 @@ if __name__ == '__main__':
         print_table(model_data)
         sys.exit()
 
-    model_path = weights_path = './models/' + sys.argv[1]
+    # model_path = weights_path = './models/' + sys.argv[1]
 
-    model_path += '.tflite'
-    model = load_tflite_model(model_path)
+    # model_path += '.tflite'
+    # model = load_tflite_model(model_path)
 
-    ser = serial.Serial('/dev/ttymxc0', 9600)
+    ser = serial.Serial('/dev/ttymxc2', 9600)
     while True:
+        
+        time.sleep(10)
+        # coral_fswebcam.capture()
 
-        time.sleep(5)
-        coral_fswebcam.capture()
+        # img_array = preprocess_image('camera_image.jpg')
+        # predicted_class, confidence = predict(model, img_array)
+        # print(f'Predicted class: {predicted_class} with confidence: {confidence:.2f}')
+        my_list = ['shark', 'non-shark']
+        predicted_class = random.choice(my_list)
 
-        img_array = preprocess_image('camera_image.jpg')
-        predicted_class, confidence = predict(model, img_array)
-        print(f'Predicted class: {predicted_class} with confidence: {confidence:.2f}')
-
-        # TODO: Add code for sending data to packet
-        ser.write(b'Hello, Serial Port!\n')
-
+        if (predicted_class == 'shark'):
+            
+            output = f'shark: {0.00} {datetime.datetime.now(datetime.timezone.utc)}\0'
+            ser.write(output.encode('utf-8'))
+        
+        print('Class: ' + predicted_class)
+      
     ser.close()
