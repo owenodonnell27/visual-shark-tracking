@@ -62,6 +62,9 @@ def print_table(data):
 
 
 if __name__ == '__main__':
+    
+    # Sleep for a little to delay the start on boot
+    # time.sleep(10)
 
     # Calling this function with: python3 main.py <model name (no file extension)>
 
@@ -74,28 +77,24 @@ if __name__ == '__main__':
         print_table(model_data)
         sys.exit()
 
-    # model_path = weights_path = './models/' + sys.argv[1]
+    model_path = weights_path = './models/' + sys.argv[1]
 
-    # model_path += '.tflite'
-    # model = load_tflite_model(model_path)
+    model_path += '.tflite'
+    model = load_tflite_model(model_path)
 
     ser = serial.Serial('/dev/ttymxc2', 9600)
     while True:
         
-        time.sleep(10)
-        # coral_fswebcam.capture()
+        time.sleep(5)
+        coral_fswebcam.capture()
 
-        # img_array = preprocess_image('camera_image.jpg')
-        # predicted_class, confidence = predict(model, img_array)
-        # print(f'Predicted class: {predicted_class} with confidence: {confidence:.2f}')
-        my_list = ['shark', 'non-shark']
-        predicted_class = random.choice(my_list)
+        img_array = preprocess_image('/home/mendel/shark/camera_image.jpg')
+        predicted_class, confidence = predict(model, img_array)
+        print(f'Predicted class: {predicted_class} with confidence: {confidence:.2f}')
 
         if (predicted_class == 'shark'):
             
-            output = f'shark: {0.00} {datetime.datetime.now(datetime.timezone.utc)}\0'
+            output = f'shark: {predicted_class} {datetime.datetime.now(datetime.timezone.utc)}\0'
             ser.write(output.encode('utf-8'))
-        
-        print('Class: ' + predicted_class)
       
     ser.close()

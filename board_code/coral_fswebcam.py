@@ -69,7 +69,8 @@ def setFilename():
 	"""
 	global _full_filename
 	# {FILENAME_PREFIX}{updateDT()}{FILE_FORMAT} --> "/home/mendel/ducklink_2025_08_15_10_32.jpg"
-	_full_filename = f"{_cur_dir}/{FILENAME_PREFIX}{updateDT()}{FILE_FORMAT}"
+	# _full_filename = f"{_cur_dir}/{FILENAME_PREFIX}{updateDT()}{FILE_FORMAT}"
+	_full_filename = f"{_cur_dir}/camera_image{FILE_FORMAT}"
 	if _VERBOSE_MODE: print(_full_filename)
 	return _full_filename
 
@@ -95,7 +96,7 @@ def capture():
 		f.close()
 		rc = 0
 	else:
-		rc = subprocess.call(f"fswebcam --device {DEVICE} --delay {DELAY} {_full_filename}", shell=True)
+		rc = subprocess.call(f"fswebcam --device {DEVICE} --delay {DELAY} /home/mendel/shark/camera_image.jpg", shell=True)
 	return rc
 
 def printParameters():

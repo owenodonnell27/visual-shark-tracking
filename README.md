@@ -23,3 +23,9 @@ When done with the coral board remove the authorized_keys folder from your board
 While in the coral board's shell, create a directory of your choosing. Before being able to upload files to a coral board using scp, you must upload an ssh key to the board. Once you have the key added, use scp to copy all models in the models folder, coral_fswebcam.py, coral_uart.py, and main.py to your newly created directory.
 
 Make sure you have the camera plugged in and then run main.py.
+
+CMDs to use on program running on boot:
+
+To stop: sudo systemctl stop myscript.service
+Check status: systemctl status myscript.service
+To see live output: sudo journalctl -fu myscript.service
