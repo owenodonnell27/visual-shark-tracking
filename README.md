@@ -26,6 +26,7 @@ Make sure you have the camera plugged in and then run main.py.
 
 CMDs to use on program running on boot:
 
+How to edit the file that runs main.py on boot: sudo vim /etc/systemd/system/myscript.service
 To stop: sudo systemctl stop myscript.service
 Check status: systemctl status myscript.service
 To see live output: sudo journalctl -fu myscript.service

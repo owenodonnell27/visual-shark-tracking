@@ -77,12 +77,11 @@ if __name__ == '__main__':
         print_table(model_data)
         sys.exit()
 
-    model_path = weights_path = './models/' + sys.argv[1]
-
-    model_path += '.tflite'
+    model_path = '/home/mendel/shark/models/' + sys.argv[1] + '.tflite'
     model = load_tflite_model(model_path)
 
     ser = serial.Serial('/dev/ttymxc2', 9600)
+    timer = time.time()
     while True:
         
         time.sleep(5)
@@ -93,8 +92,10 @@ if __name__ == '__main__':
         print(f'Predicted class: {predicted_class} with confidence: {confidence:.2f}')
 
         if (predicted_class == 'shark'):
-            
             output = f'shark: {predicted_class} {datetime.datetime.now(datetime.timezone.utc)}\0'
             ser.write(output.encode('utf-8'))
+        elif (timer - time.time() > 300):
+            ser.write(b'health: Still alive')
+            timer = time.time()
       
     ser.close()
